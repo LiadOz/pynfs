@@ -51,7 +51,7 @@ setup(name="pynfs",
       pbr=True,
       # cmdclass={"build_py": build_py, "install": CustomInstall},
       cmdclass={"build_py": build_py},
-      scripts=['pynfs/xdr/xdrgen.py', 'pynfs/nfs40/testserver.py', 'pynfs/nfs40/showresults.py'],
+      scripts=['pynfs/xdr/xdrgen.py', 'pynfs/nfs40/testserver.py', './showresults.py'],
 
       # These will be the same
       author="Fred Isaman",
