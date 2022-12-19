@@ -8,7 +8,9 @@
 #
 from __future__ import print_function
 from __future__ import with_statement
-import nfs4lib
+# TODO figure out if I can remove this
+# there is was a symbolic link to this file inside nfs40 and I want this file to be common for nfs40 and nfs41
+# import nfs4lib
 import re
 import sys
 import time
