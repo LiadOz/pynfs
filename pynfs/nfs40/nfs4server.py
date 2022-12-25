@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 #
 # nfs4server.py - NFS4 server in python
 #
@@ -25,15 +24,18 @@ if  __name__ == "__main__":
     if os.path.isfile(os.path.join(sys.path[0], 'lib', 'testmod.py')):
         sys.path.insert(1, os.path.join(sys.path[0], 'lib'))
 
-from xdrdef.nfs4_const import *
-from xdrdef.nfs4_type import *
-import xdrdef.nfs4_pack as nfs4_pack
-import rpc.rpc as rpc
-import nfs4lib
-import time, StringIO, random, traceback, codecs
-import StringIO
-import nfs4state
-from nfs4state import NFS4Error, printverf
+from ..nfscommon.xdrdef.nfs4_const import *
+from ..nfscommon.xdrdef.nfs4_type import *
+from ..nfscommon.xdrdef import nfs4_pack
+from .lib.rpc import rpc
+from . import nfs4lib
+import time, random, traceback, codecs
+try:
+    import StringIO
+except:
+    from io import StringIO
+from . import nfs4state
+from .nfs4state import NFS4Error, printverf
 from xdrlib import Error as XDRError
 
 unacceptable_names = [ "", ".", ".." ]
@@ -732,8 +734,8 @@ class NFS4Server(rpc.RPCServer):
         return simple_error(NFS4_OK, r4resok)
 
     def op_rename(self, op):
-        print("  SAVED FILEHANDLE: %s" % repr(self.saved_fh)  # old dir)
-        print("  CURRENT FILEHANDLE: %s" % repr(self.curr_fh) # new dir)
+        print("  SAVED FILEHANDLE: %s" % repr(self.saved_fh))  # old dir
+        print("  CURRENT FILEHANDLE: %s" % repr(self.curr_fh)) # new dir
         print("  OLD NAME: %s" % op.oprename.oldname)
         print("  NEW NAME: %s" % op.oprename.newname)
         if self.curr_fh is None or self.saved_fh is None:
@@ -966,7 +968,7 @@ def startup(host, port):
     except:
         pass
 
-if __name__ == "__main__":
+def start_server():
     port = 2049
     server = ''
     if len(sys.argv) > 2:

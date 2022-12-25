@@ -35,16 +35,16 @@ import inspect
 from os.path import basename
 import threading
 
-import rpc.rpc as rpc
-import rpc.rpc_const as rpc_const
-import xdrdef.nfs4_const as nfs4_const
-from  xdrdef.nfs4_const import *
-import xdrdef.nfs4_type as nfs4_type
-from xdrdef.nfs4_type import *
+from .lib.rpc import rpc
+from ..rpc import rpc_const
+from ..nfscommon.xdrdef import nfs4_const
+from  ..nfscommon.xdrdef.nfs4_const import *
+from ..nfscommon.xdrdef import nfs4_type
+from ..nfscommon.xdrdef.nfs4_type import *
 from xdrlib import Error as XDRError
-import xdrdef.nfs4_pack as nfs4_pack
+from ..nfscommon.xdrdef import nfs4_pack
 
-import nfs_ops
+from ..nfscommon import nfs_ops
 op4 = nfs_ops.NFS4ops()
 
 class NFSException(rpc.RPCError):

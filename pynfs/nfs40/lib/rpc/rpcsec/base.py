@@ -1,5 +1,5 @@
-from rpc.rpc_const import AUTH_NONE
-from rpc.rpc_type import opaque_auth
+from pynfs.rpc.rpc_const import AUTH_NONE
+from pynfs.rpc.rpc_type import opaque_auth
 
 class SecError(Exception):
     pass

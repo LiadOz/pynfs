@@ -1,7 +1,7 @@
-from xdrdef.nfs4_type import server_owner4, nfs_impl_id4
-from xdrdef.nfs4_const import *
-import xdrdef.nfs4_const
-import nfs4lib
+from ..nfscommon.xdrdef.nfs4_type import server_owner4, nfs_impl_id4
+from ..nfscommon.xdrdef.nfs4_const import *
+from ..nfscommon.xdrdef import nfs4_const
+from . import nfs4lib
 from copy import deepcopy
 import os
 
@@ -117,8 +117,7 @@ class MetaConfig(type):
             setattr(cls, attr.name, property(make_get(i), make_set(i),
                                              None, attr.comment))
 
-class ServerConfig(object):
-    __metaclass__ = MetaConfig
+class ServerConfig(object, metaclass=MetaConfig):
     attrs =  [ConfigLine("allow_null_data", False,
                          "Server allows NULL calls to contain data"),
               ConfigLine("tag_info", True,
@@ -131,17 +130,16 @@ class ServerConfig(object):
 
     def __init__(self):
         self.minor_id = os.getpid()
-        self.major_id = "PyNFSv4.1"
+        self.major_id = b"PyNFSv4.1"
         self._owner = server_owner4(self.minor_id, self.major_id)
-        self.scope = "Default_Scope"
-        self.impl_domain = "citi.umich.edu"
-        self.impl_name = "pynfs X.X"
+        self.scope = b"Default_Scope"
+        self.impl_domain = b"citi.umich.edu"
+        self.impl_name = b"pynfs X.X"
         self.impl_date = 1172852767 # int(time.time())
         self.impl_id = nfs_impl_id4(self.impl_domain, self.impl_name,
                                  nfs4lib.get_nfstime(self.impl_date))
 
-class ServerPerClientConfig(object):
-    __metaclass__ = MetaConfig
+class ServerPerClientConfig(object, metaclass=MetaConfig):
     attrs = [ConfigLine("maxrequestsize", 16384,
                         "Maximum request size the server will accept"),
              ConfigLine("maxresponsesize", 16384,
@@ -175,15 +173,13 @@ _invalid_ops = [
     OP_RELEASE_LOCKOWNER, OP_ILLEGAL,
     ]
 
-class OpsConfigServer(object):
-    __metaclass__ = MetaConfig
+class OpsConfigServer(object, metaclass=MetaConfig):
     value = ['ERROR', 0, 0] # Note must have value == _opline(value)
     attrs = (lambda value=value: [ConfigLine(name.lower()[3:], value, "Generic comment", _opline)
                                   for name in nfs_opnum4.values()])()
 
 
-class Actions(object):
-    __metaclass__ = MetaConfig
+class Actions(object, metaclass=MetaConfig):
     attrs = [ConfigLine("reboot", 0,
                         "Any write here will simulate a server reboot",
                         _action),

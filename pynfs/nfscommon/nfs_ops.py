@@ -3,11 +3,11 @@
 this routine packing from the user.
 """
 
-from xdrdef import nfs4_type
-from xdrdef import nfs4_const
+from .xdrdef import nfs4_type
+from .xdrdef import nfs4_const
 
-from xdrdef import nfs3_type
-from xdrdef import nfs3_const
+from .xdrdef import nfs3_type
+from .xdrdef import nfs3_const
 
 def nfs4_op_names():
     skip = len('OP_')

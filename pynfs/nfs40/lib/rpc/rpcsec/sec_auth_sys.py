@@ -1,6 +1,6 @@
 from .base import SecFlavor, SecError
-from rpc.rpc_const import AUTH_SYS
-from rpc.rpc_type import opaque_auth
+from pynfs.rpc.rpc_const import AUTH_SYS
+from pynfs.rpc.rpc_type import opaque_auth
 from xdrlib import Packer, Error
 
 class SecAuthSys(SecFlavor):

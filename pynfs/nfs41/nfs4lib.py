@@ -1,9 +1,10 @@
 from __future__ import with_statement
-import rpc.rpc as rpc
-import xdrdef.nfs4_const
-from xdrdef.nfs4_pack import NFS4Packer, NFS4Unpacker
-import xdrdef.nfs4_type
-import nfs_ops
+from ..rpc import rpc
+from ..nfscommon import xdrdef
+from ..nfscommon.xdrdef import nfs4_const
+from ..nfscommon.xdrdef.nfs4_pack import NFS4Packer, NFS4Unpacker
+from ..nfscommon.xdrdef import nfs4_type
+from ..nfscommon import nfs_ops
 import time
 import collections
 import hmac
@@ -11,7 +12,7 @@ import struct
 import random
 import re
 import os
-from locking import Lock
+from .locking import Lock
 try:
     from Crypto.Cipher import AES
 except ImportError:
@@ -549,6 +550,8 @@ def parse_nfs_url(url):
 def path_components(path, use_dots=True):
     """Convert a string '/a/b/c' into an array ['a', 'b', 'c']"""
     out = []
+    if isinstance(path, str):
+        path = path.encode()
     for c in path.split(b'/'):
         if c == b'':
             pass
@@ -649,7 +652,7 @@ class AttrConfig(object):
         self._s = (kind=="serv")
         self._fs = (kind=="fs")
 
-from xdrdef.nfs4_const import *
+from ..nfscommon.xdrdef.nfs4_const import *
 
 A = AttrConfig
 attr_info = { FATTR4_SUPPORTED_ATTRS : A("r", "fs"),

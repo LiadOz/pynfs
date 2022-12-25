@@ -1,17 +1,17 @@
-from nfs4state import FileState
-from xdrdef.nfs4_const import *
-from xdrdef.nfs4_type import fsid4, layout4, layout_content4, nfsv4_1_file_layout4
-import nfs4lib
-from nfs4lib import NFS4Error
+from .nfs4state import FileState
+from ..nfscommon.xdrdef.nfs4_const import *
+from ..nfscommon.xdrdef.nfs4_type import fsid4, layout4, layout_content4, nfsv4_1_file_layout4
+from . import nfs4lib
+from .nfs4lib import NFS4Error
 import struct
 import logging
-from locking import Lock, RWLock
+from .locking import Lock, RWLock
 try:
     import cStringIO.StringIO as StringIO
 except:
     from io import StringIO
 import time
-from xdrdef.nfs4_pack import NFS4Packer
+from ..nfscommon.xdrdef.nfs4_pack import NFS4Packer
 
 log_o = logging.getLogger("fs.obj")
 log_fs = logging.getLogger("fs")
@@ -703,7 +703,7 @@ class StubFS_Mem(FileSystem):
     def sync(self, obj, how):
         return FILE_SYNC4
 
-from config import ServerPerClientConfig, ConfigAction
+from .config import ServerPerClientConfig, ConfigAction
 
 class ConfigObj(FSObject):
     def associate(self, configline):
@@ -1049,20 +1049,20 @@ class StubFS_Disk(FileSystem):
         try:
             # Create meta-data file
             log_fs.debug("writing metadata for id=%i" % id)
-            fd = open(os.path.join(self.path, "m_%i" % id), "w")
+            fd = open(os.path.join(self.path, "m_%i" % id), "wb")
             log_fs.debug("%r" % obj.meta.__dict__)
             pickle.dump(obj.meta, fd)
             fd.close()
             if obj.type == NF4REG:
                 # Create data file
-                fd = open(os.path.join(self.path, "d_%i" % id), "w")
+                fd = open(os.path.join(self.path, "d_%i" % id), "wb")
                 obj.file.seek(0)
                 fd.write(obj.file.read())
                 fd.close()
             elif obj.type == NF4DIR:
                 # Create dir entries
                 log_fs.debug("writing dir %r" % obj.entries.keys())
-                fd = open(os.path.join(self.path, "d_%i" % id), "w")
+                fd = open(os.path.join(self.path, "d_%i" % id), "wb")
                 pickle.dump(obj.entries, fd)
                 fd.close()
         finally:
@@ -1071,8 +1071,8 @@ class StubFS_Disk(FileSystem):
 
 ###################################################
 
-from xdrdef.pnfs_block_type import pnfs_block_extent4, pnfs_block_layout4
-import block
+from ..nfscommon.xdrdef.pnfs_block_type import pnfs_block_extent4, pnfs_block_layout4
+from . import block
 
 class my_ro_extent(object):
     def __init__(self, f_offset, d_offset, length):

@@ -3,11 +3,12 @@
 (As opposed to library routines, which would be in nfs4lib.py.)
 """
 
-import nfs4lib
-from xdrdef.nfs4_const import *
+from . import nfs4lib
+from ..nfscommon import xdrdef
+from ..nfscommon.xdrdef.nfs4_const import *
 import sys
-import xdrdef.nfs4_type, xdrdef.nfs4_const
-from xdrdef.nfs4_type import *
+from ..nfscommon.xdrdef import nfs4_type, nfs4_const
+from ..nfscommon.xdrdef.nfs4_type import *
 
 _d = {"CompoundState" : "CompoundState",
       "PairedResults" : "PairedResults",

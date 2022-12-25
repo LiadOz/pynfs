@@ -15,9 +15,9 @@ import select
 import threading
 import errno
 
-from rpc.rpc_const import *
-from rpc.rpc_type import *
-import rpc.rpc_pack as rpc_pack
+from pynfs.rpc.rpc_const import *
+from pynfs.rpc.rpc_type import *
+import pynfs.rpc.rpc_pack as rpc_pack
 
 # Import security flavors and store valid ones
 from .rpcsec.sec_auth_none import SecAuthNone

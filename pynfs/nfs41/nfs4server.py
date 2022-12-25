@@ -1,25 +1,24 @@
-#!/usr/bin/env python3
 from __future__ import with_statement
-import use_local # HACK so don't have to rebuild constantly
-import nfs4lib
-from nfs4lib import inc_u32, NFS4Error, NFS4Replay
-import rpc.rpc as rpc
-from xdrdef.nfs4_const import *
-from xdrdef.nfs4_type import *
-from xdrdef.sctrl_pack import SCTRLPacker, SCTRLUnpacker
-import xdrdef.sctrl_type, xdrdef.sctrl_const
+from . import nfs4lib
+from .nfs4lib import inc_u32, NFS4Error, NFS4Replay
+from ..rpc import rpc
+from ..nfscommon.xdrdef.nfs4_const import *
+from ..nfscommon.xdrdef.nfs4_type import *
+from ..nfscommon.xdrdef.sctrl_pack import SCTRLPacker, SCTRLUnpacker
+from ..nfscommon.xdrdef import sctrl_type, sctrl_const
 import traceback, threading
-from locking import Lock, Counter
+from .locking import Lock, Counter
 import time
 import hmac
 import random
 import struct
 import collections
 import logging
-from nfs4state import find_state
-from nfs4commoncode import CompoundState, encode_status, encode_status_by_name
-from fs import RootFS, ConfigFS
-from config import ServerConfig, ServerPerClientConfig, OpsConfigServer, Actions
+from .nfs4state import find_state
+from .nfs4commoncode import CompoundState, encode_status, encode_status_by_name
+from .fs import RootFS, ConfigFS
+from .config import ServerConfig, ServerPerClientConfig, OpsConfigServer, Actions
+import importlib
 
 logging.basicConfig(level=logging.WARN,
                     format="%(levelname)-7s:%(name)s:%(message)s")
@@ -367,6 +366,7 @@ class SessionRecord(object):
         self.client = client # reference back to client which created this session
         self.sessionid = "%08x%08x" % (client.clientid,
                                     client.session_replay.seqid) # XXX does this work?
+        self.sessionid = self.sessionid.encode()
         self.channel_fore = Channel(csa.csa_fore_chan_attrs, client.config) # Normal communication
         self.channel_back = Channel(csa.csa_back_chan_attrs, client.config) # Callback communication
         self.persist = False # see 2.10.4.5 STUB - currently no way to set True
@@ -581,7 +581,7 @@ class NFS4Server(rpc.Server):
         self.devids = {} # {devid: device}
         # default cred for the backchannel -- currently supports only AUTH_SYS
         rpcsec = rpc.security.instance(rpc.AUTH_SYS)
-        self.default_cred = rpcsec.init_cred(uid=4321,gid=42,name="mystery")
+        self.default_cred = rpcsec.init_cred(uid=4321,gid=42,name=b"mystery")
         self.err_inc_dict = self.init_err_inc_dict()
 
     def start(self):
@@ -795,8 +795,8 @@ class NFS4Server(rpc.Server):
         # STUB
         self.check_utf8str_cs(str)
         if not str:
-            raise NFS4Error(NFS4ERR_INVAL, tag="Empty component")
-        if '/' in str:
+            raise NFS4Error(NFS4ERR_INVAL, tag=b"Empty component")
+        if b'/' in str:
             raise NFS4Error(NFS4ERR_BADCHAR)
 
     def op_compound(self, args, cred):
@@ -837,7 +837,7 @@ class NFS4Server(rpc.Server):
                 except NFS4Replay:
                     # Just pass this on up
                     raise
-                except StandardError:
+                except Exception:
                     # Uh-oh.  This is a server bug
                     traceback.print_exc()
                     result = encode_status_by_name(opname.lower()[3:],
@@ -1103,7 +1103,7 @@ class NFS4Server(rpc.Server):
                                 c.protection.rv(arg.eia_state_protect),
                                 self.config._owner, self.config.scope,
                                 [self.config.impl_id])
-        return encode_status(NFS4_OK, res, msg="draft21")
+        return encode_status(NFS4_OK, res, msg=b"draft21")
 
     def client_reboot(self, c):
         # STUB - locking?
@@ -2047,7 +2047,7 @@ class NFS4Server(rpc.Server):
         # "The server MUST specify...an ONC RPC version number equal to 4",
         # Per the May 17, 2010 discussion on the ietf list, errataID 2291
         # indicates it should in fact be 1
-        return pipe.send_call(prog, 1, 0, "", credinfo)
+        return pipe.send_call(prog, 1, 0, b"", credinfo)
 
     def cb_null(self, prog, pipe, credinfo=None):
         """ Sends bc_null."""
@@ -2068,7 +2068,7 @@ def read_exports(server, opts):
     file = opts.exports
     if file.endswith(".py"):
         file = file[:-3]
-    mod = __import__(file)
+    mod = importlib.import_module('.' + file, 'pynfs.nfs41')
     mod.mount_stuff(server, opts)
 
 def scan_options():
@@ -2107,7 +2107,7 @@ def scan_options():
         p.error("Unhandled argument %r" % args[0])
     return opts
 
-if __name__ == "__main__":
+def start_server():  # exposed as a shell script
     opts = scan_options()
     if opts.debug_locks:
         import locking

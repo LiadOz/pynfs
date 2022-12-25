@@ -1,17 +1,17 @@
-import rpc.rpc as rpc
-import nfs4lib
-import xdrdef.nfs4_type as type4
-from xdrdef.nfs4_pack import NFS4Packer
-import xdrdef.nfs4_const as const4
-import xdrdef.nfs3_type as type3
-import xdrdef.nfs3_const as const3
+from ..rpc import rpc
+from . import nfs4lib
+from ..nfscommon.xdrdef import nfs4_type as type4
+from ..nfscommon.xdrdef.nfs4_pack import NFS4Packer
+from ..nfscommon.xdrdef import nfs4_const as const4
+from ..nfscommon.xdrdef import nfs3_type as type3
+from ..nfscommon.xdrdef import nfs3_const as const3
 import time
 import logging
-import nfs4client
-import nfs3client
+from . import nfs4client
+from . import nfs3client
 import hashlib
 import sys
-import nfs_ops
+from ..nfscommon import nfs_ops
 import socket
 
 log = logging.getLogger("Dataserver Manager")
@@ -62,7 +62,7 @@ class DataServer(object):
         uaddr = '.'.join([self.server,
                           str(self.port >> 8),
                           str(self.port & 0xff)])
-        return type4.netaddr4(self.proto, uaddr)
+        return type4.netaddr4(self.proto.encode(), uaddr.encode())
 
     def get_multipath_netaddr4s(self):
         netaddr4s = []
@@ -111,7 +111,7 @@ class DataServer41(DataServer):
                 self.reset()
             else:
                 log.error("Unhandled status %s from DS %s" %
-                          (nfsstat4[res.status], self.server))
+                          (const4.nfsstat4[res.status], self.server))
                 raise Exception("Dataserver communication error")
 
     def connect(self):
@@ -122,7 +122,8 @@ class DataServer41(DataServer):
                                         summary=self.summary)
         self.c1.set_cred(self.cred1)
         self.c1.null()
-        c = self.c1.new_client("DS.init_%s" % self.server)
+        client_name = "DS.init_%s" % self.server
+        c = self.c1.new_client(client_name.encode())
         # This is a hack to ensure MDS/DS communication path is at least
         # as wide as the client/MDS channel (at least for linux client)
         fore_attrs = type4.channel_attrs4(0, 16384, 16384, 2868, 8, 8, [])
@@ -338,14 +339,14 @@ class DSDevice(object):
                 server_list = server_list[:-1]
                 try:
                     log.info("Adding dataserver ip:%s port:%s path:%s" %
-                             (server, port, '/'.join(path)))
+                             (server, port, b'/'.join(path)))
                     ds = DataServer41(server, port, path, mdsds=self.mdsds,
                                     multipath_servers=server_list,
                                     summary=server_obj.summary)
                     self.list.append(ds)
                 except socket.error:
                     log.critical("cannot access %s:%i/%s" %
-                                 (server, port, '/'.join(path)))
+                                 (server, port, b'/'.join(path)))
                     sys.exit(1)
         self.active = 1
         self.address_body = self._get_address_body()

@@ -35,12 +35,12 @@ if  __name__ == "__main__":
     if os.path.isfile(os.path.join(sys.path[0], 'lib', 'testmod.py')):
         sys.path.insert(1, os.path.join(sys.path[0], 'lib'))
 
-import nfs4lib
-import testmod
+from . import nfs4lib
+from .. import testmod
 from optparse import OptionParser, OptionGroup, IndentedHelpFormatter
-import servertests.environment as environment
+from . servertests import environment
 import socket
-import rpc.rpc as rpc
+from ..rpc import rpc
 import pickle
 
 VERSION="0.2" # How/when update this?

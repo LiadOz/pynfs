@@ -1,5 +1,5 @@
-from fs import StubFS_Mem, StubFS_Disk, BlockLayoutFS, FileLayoutFS
-from dataserver import DSDevice
+from pynfs.nfs41.fs import StubFS_Mem, StubFS_Disk, BlockLayoutFS, FileLayoutFS
+from pynfs.nfs41.dataserver import DSDevice
 
 def mount_stuff(server, opts):
     """Mount some filesystems to the server"""

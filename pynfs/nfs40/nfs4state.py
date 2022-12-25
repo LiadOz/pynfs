@@ -1,24 +1,24 @@
-from xdrdef.nfs4_const import *
-from xdrdef.nfs4_type import *
-import rpc.rpc
-import nfs4acl
-import nfs4lib
+from ..nfscommon.xdrdef.nfs4_const import *
+from ..nfscommon.xdrdef.nfs4_type import *
+from ..rpc import rpc
+from . import nfs4acl
+from . import nfs4lib
 import os, time, array, random, string
 try:
     import cStringIO.StringIO as StringIO
 except:
     from io import StringIO
 from stat import *
-import sha
+import hashlib
 
 
 inodecount = 0
 generationcount = 0
 
-InstanceKey = string.join([random.choice(string.ascii_letters) for x in range(4)], "")
+InstanceKey = ''.join([random.choice(string.ascii_letters) for x in range(4)])
 def Mutate():
     global InstanceKey
-    InstanceKey = string.join([random.choice(string.ascii_letters) for x in range(4)], "")
+    InstanceKey = ''.join([random.choice(string.ascii_letters) for x in range(4)])
 
 
 POSIXLOCK = True # If True, allow locks to be split/joined automatically
@@ -56,14 +56,14 @@ def packnumber(number, size=NFS4_VERIFIER_SIZE, factor=1):
 
     If result will not fit, the high bits are truncated.
     """
-    numb = long(number * factor)
+    numb = int(number * factor)
     bytes = array.array('B')
     for i in range(size):
         bytes.append(0)
     # i == size - 1
     while numb > 0 and i >= 0:
         bytes[i] = numb % 256
-        numb /= 256
+        numb //= 256
         i -= 1
     return bytes.tostring()
 
@@ -285,7 +285,7 @@ class NFSServerState:
         # RFC 3530 sec 8.1.5
         try:
             info = self.__getinfo(owner)
-        except (ValueError as NFS4Error):
+        except ValueError as NFS4Error:
             # An unknown owner, do nothing
             return
         if info is None:
@@ -890,7 +890,8 @@ class NFSFileHandle:
         global InstanceKey
         # Note: name should be removed, since hardlinking makes it unknowable
         self.name = name
-        self.handle = InstanceKey + self.get_fhclass() + sha.new(self.name+str(time.time())).hexdigest() + "\x00\x00\x00\x00"
+        data = (self.name+str(time.time())).encode('utf-8')
+        self.handle = InstanceKey + self.get_fhclass() + hashlib.sha256(data).hexdigest() + "\x00\x00\x00\x00"
         self.fattr4_change = 0
         self.lock_status = {}
         self.parent = parent

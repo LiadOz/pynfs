@@ -1,18 +1,17 @@
-import use_local # HACK so don't have to rebuild constantly
-import rpc.rpc as rpc
-import nfs4lib
+from ..rpc import rpc
+from . import nfs4lib
 #from nfs4lib import NFS4Error, NFS4Replay, inc_u32
-from xdrdef.sctrl_pack import SCTRLPacker, SCTRLUnpacker
-from xdrdef.nfs3_type import *
-from xdrdef.nfs3_const import *
-from xdrdef.nfs3_pack import NFS3Packer, NFS3Unpacker
-from xdrdef.mnt3_type import *
-from xdrdef.mnt3_const import *
-from xdrdef.mnt3_pack import MNT3Packer, MNT3Unpacker
-from xdrdef.portmap_type import *
-from xdrdef.portmap_const import *
-from xdrdef.portmap_pack import PORTMAPPacker, PORTMAPUnpacker
-import nfs_ops
+from ..nfscommon.xdrdef.sctrl_pack import SCTRLPacker, SCTRLUnpacker
+from ..nfscommon.xdrdef.nfs3_type import *
+from ..nfscommon.xdrdef.nfs3_const import *
+from ..nfscommon.xdrdef.nfs3_pack import NFS3Packer, NFS3Unpacker
+from ..nfscommon.xdrdef.mnt3_type import *
+from ..nfscommon.xdrdef.mnt3_const import *
+from ..nfscommon.xdrdef.mnt3_pack import MNT3Packer, MNT3Unpacker
+from ..nfscommon.xdrdef.portmap_type import *
+from ..nfscommon.xdrdef.portmap_const import *
+from ..nfscommon.xdrdef.portmap_pack import PORTMAPPacker, PORTMAPUnpacker
+from ..nfscommon import nfs_ops
 import time, struct
 import threading
 import hmac
