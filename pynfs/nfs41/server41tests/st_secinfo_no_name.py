@@ -1,10 +1,10 @@
 from .st_create_session import create_session
-from xdrdef.nfs4_const import *
+from pynfs.nfscommon.xdrdef.nfs4_const import *
 from .environment import check, fail, bad_sessionid, create_file
-from xdrdef.nfs4_type import channel_attrs4
-import nfs_ops
+from pynfs.nfscommon.xdrdef.nfs4_type import channel_attrs4
+from pynfs.nfscommon import nfs_ops
 op = nfs_ops.NFS4ops()
-import nfs4lib
+from pynfs.nfs41 import nfs4lib
 
 def testSupported(t, env):
     """Do a simple SECINFO_NO_NAME

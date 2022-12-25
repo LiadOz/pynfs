@@ -1,11 +1,11 @@
-from xdrdef.nfs4_const import *
-import nfs_ops
+from pynfs.nfscommon.xdrdef.nfs4_const import *
+from pynfs.nfscommon import nfs_ops
 op = nfs_ops.NFS4ops()
 import time
 from .environment import check, fail
-from xdrdef.nfs4_type import *
-from rpc.rpc import RPCAcceptError, GARBAGE_ARGS, RPCTimeout
-from nfs4lib import NFS4Error, hash_oids, encrypt_oids
+from pynfs.nfscommon.xdrdef.nfs4_type import *
+from pynfs.rpc.rpc import RPCAcceptError, GARBAGE_ARGS, RPCTimeout
+from pynfs.nfs41.nfs4lib import NFS4Error, hash_oids, encrypt_oids
 
 def _getleasetime(sess):
     res = sess.compound([op.putrootfh(), op.getattr(1 << FATTR4_LEASE_TIME)])

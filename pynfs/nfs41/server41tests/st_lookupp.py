@@ -1,6 +1,6 @@
-from xdrdef.nfs4_const import *
+from pynfs.nfscommon.xdrdef.nfs4_const import *
 from .environment import check, fail, use_obj
-import nfs_ops
+from pynfs.nfscommon import nfs_ops
 op = nfs_ops.NFS4ops()
 
 # NOTE: most of these require the --maketree to be run first

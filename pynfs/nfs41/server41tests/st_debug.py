@@ -1,8 +1,8 @@
 from .st_create_session import create_session
-from xdrdef.nfs4_const import *
+from pynfs.nfscommon.xdrdef.nfs4_const import *
 from .environment import check, fail, create_file, close_file
-from xdrdef.nfs4_type import open_owner4, openflag4, createhow4, open_claim4
-import nfs_ops
+from pynfs.nfscommon.xdrdef.nfs4_type import open_owner4, openflag4, createhow4, open_claim4
+from pynfs.nfscommon import nfs_ops
 op = nfs_ops.NFS4ops()
 import threading
 

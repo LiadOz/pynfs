@@ -214,10 +214,10 @@ class DictTree(object):
     def itervalues(self):
         def myiter(d, depth):
             if depth == 1:
-                for value in d.itervalues():
+                for value in d.values():
                     yield value
             else:
-                for sub_d in d.itervalues():
+                for sub_d in d.values():
                     for i in myiter(sub_d, depth - 1):
                         yield i
         for i in myiter(self._data, self._depth):

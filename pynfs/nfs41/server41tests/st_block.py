@@ -1,12 +1,12 @@
-from xdrdef.nfs4_const import *
-from xdrdef.nfs4_type import *
-import nfs_ops
+from pynfs.nfscommon.xdrdef.nfs4_const import *
+from pynfs.nfscommon.xdrdef.nfs4_type import *
+from pynfs.nfscommon import nfs_ops
 op = nfs_ops.NFS4ops()
 from .environment import check, fail, create_file
-from block import Packer as BlockPacker, Unpacker as BlockUnpacker, \
+from pynfs.nfs41.block import Packer as BlockPacker, Unpacker as BlockUnpacker, \
     PNFS_BLOCK_READWRITE_DATA, pnfs_block_layoutupdate4, \
     pnfs_block_extent4
-from nfs4lib import FancyNFS4Packer, get_nfstime
+from pynfs.nfs41.nfs4lib import FancyNFS4Packer, get_nfstime
 
 
 def testStateid1(t, env):

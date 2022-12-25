@@ -1,13 +1,13 @@
-from xdrdef.nfs4_const import *
-from xdrdef.nfs4_type import *
+from pynfs.nfscommon.xdrdef.nfs4_const import *
+from pynfs.nfscommon.xdrdef.nfs4_type import *
 from .environment import check, fail, create_file, open_file, create_confirm, close_file
 import sys
 import os
 import time
 import logging
-import nfs_ops
+from pynfs.nfscommon import nfs_ops
 op = nfs_ops.NFS4ops()
-from rpc.rpc import RPCTimeout
+from pynfs.rpc.rpc import RPCTimeout
 
 # NOTE - reboot tests are NOT part of the standard test suite
 

@@ -9,18 +9,18 @@
 #
 
 import time
-import testmod
-from xdrdef.nfs4_const import *
-from xdrdef.nfs4_type import *
-import rpc.rpc as rpc
-import nfs4client
+from pynfs import testmod
+from pynfs.nfscommon.xdrdef.nfs4_const import *
+from pynfs.nfscommon.xdrdef.nfs4_type import *
+from pynfs.rpc import rpc
+from pynfs.nfs41 import nfs4client
 import os
-import nfs4lib
+from pynfs.nfs41 import nfs4lib
 import logging
 import struct
-from rpc.security import AuthSys, AuthGss
+from pynfs.rpc.security import AuthSys, AuthGss
 from threading import Lock
-import nfs_ops
+from pynfs.nfscommon import nfs_ops
 op = nfs_ops.NFS4ops()
 
 log = logging.getLogger("test.env")
@@ -111,8 +111,8 @@ class Environment(testmod.Environment):
         self._lock = Lock()
         self.opts = opts
         opts.home = opts.path + ['a']
-        self.root = os.path.join(os.sep, *opts.path)
-        self.home = os.path.join(os.sep, *opts.home)
+        self.root = os.path.join(os.sep, *[x.decode() for x in opts.path])
+        self.home = os.path.join(os.sep, *[x.decode() for x in opts.home if type(x) == bytes])
 
         self.timestamp = int(time.time())
         self._last_verf = self.timestamp + 1

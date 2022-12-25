@@ -1,8 +1,8 @@
-from xdrdef.nfs4_const import *
+from pynfs.nfscommon.xdrdef.nfs4_const import *
 from .environment import check, fail, maketree, rename_obj, get_invalid_utf8strings, create_obj, create_confirm, link, use_obj, create_file, close_file
-import nfs_ops
+from pynfs.nfscommon import nfs_ops
 op = nfs_ops.NFS4ops()
-from xdrdef.nfs4_type import *
+from pynfs.nfscommon.xdrdef.nfs4_type import *
 
 def testValidDir(t, env):
     """RENAME : normal operation

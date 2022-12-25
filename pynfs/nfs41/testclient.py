@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # nfs4stest.py - nfsv4 server tester
 #
 # Requires python 3.2
@@ -21,19 +20,18 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 
-import use_local # HACK so don't have to rebuild constantly
 import sys
 if sys.hexversion < 0x03020000:
     print("Requires python 3.2 or higher")
     sys.exit(1)
 import os
 
-import nfs4lib
-import testmod
+from . import nfs4lib
+from .. import testmod
 from optparse import OptionParser, OptionGroup, IndentedHelpFormatter
-import client41tests.environment as environment
+from .client41tests import environment
 import socket
-import rpc.rpc as rpc
+from ..rpc import rpc
 import pickle
 
 def parse_useparams(str):
@@ -145,7 +143,7 @@ def scan_options(p):
                  help="Use SERVER:/OBJPATH as directory")
     g.add_option("--userofs", default=None, metavar="DIRPATH",
                  help="Use SERVER:/DIRPATH for ROFS tests")
-    g.add_option("--useparams", default=None, metavar="PARAMETERS",
+    g.add_option("--useparams", default='', metavar="PARAMETERS",
                  help="Use parameters [OPERATION:Messagetype:Value:Value]. "
                       "The testTwoValueSetupOrCleanup client test uses the "
                       "ERROR messagetype as follows; "
@@ -217,7 +215,7 @@ def main():
     opt, args = scan_options(p)
 
     # Create test database
-    tests, fdict, cdict = testmod.createtests('client41tests')
+    tests, fdict, cdict = testmod.createtests('pynfs.nfs41.client41tests')
 
     # Deal with any informational options
     if opt.showflags:
@@ -331,6 +329,3 @@ def main():
     testmod.printresults(tests, opt)
     if fail:
         print("\nWARNING: could not clean testdir due to:\n%s\n" % str(e))
-
-if __name__ == "__main__":
-    main()

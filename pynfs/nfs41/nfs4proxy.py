@@ -1,25 +1,23 @@
-#!/usr/bin/env python3
 from __future__ import with_statement
-import use_local # HACK so don't have to rebuild constantly
-import nfs4lib
-from nfs4lib import inc_u32, NFS4Error, NFS4Replay
-import rpc.rpc as rpc
-from xdrdef.nfs4_const import *
-from xdrdef.nfs4_type import *
-from xdrdef.sctrl_pack import SCTRLPacker, SCTRLUnpacker
-import xdrdef.sctrl_type, xdrdef.sctrl_const
+from . import nfs4lib
+from .nfs4lib import inc_u32, NFS4Error, NFS4Replay
+from ..rpc import rpc
+from ..nfscommon.xdrdef.nfs4_const import *
+from ..nfscommon.xdrdef.nfs4_type import *
+from ..nfscommon.xdrdef.sctrl_pack import SCTRLPacker, SCTRLUnpacker
+from ..nfscommon.xdrdef import sctrl_type, sctrl_const
 import traceback, threading
-from locking import Lock, Counter
+from .locking import Lock, Counter
 import time
 import hmac
 import random
 import struct
 import collections
 import logging
-from nfs4commoncode import CBCompoundState, CompoundState, encode_status, encode_status_by_name
-import nfs4client
+from .nfs4commoncode import CBCompoundState, CompoundState, encode_status, encode_status_by_name
+from . import nfs4client
 import sys, traceback
-from errorparser import ErrorDesc, ErrorParser
+from .errorparser import ErrorDesc, ErrorParser
 
 log = logging.getLogger("nfs.proxy")
 log.setLevel(logging.INFO)
@@ -46,7 +44,7 @@ class NFS4Proxy(rpc.Server):
             self.cb_versions = [cb_version]
             # currently support only root (? fix ? )
             rpcsec = rpc.security.instance(rpc.AUTH_SYS)
-            self.default_cred = rpcsec.init_cred(uid=0,gid=0,name="root")
+            self.default_cred = rpcsec.init_cred(uid=0,gid=0,name=b"root")
             if pipe: #reuse connection
                 self.pipe = pipe
             else:
@@ -98,7 +96,7 @@ class NFS4Proxy(rpc.Server):
         self.program = kwargs.pop("program", NFS4_PROGRAM)
         self.version = kwargs.pop("version", 4)
         self.cb_version = kwargs.pop("cb_version", 1)
-        self.tag = "proxy tag"
+        self.tag = b"proxy tag"
         self.fchannel = self.Channel(34000, 34000, 1200, 8, 8)
         self.bchannel = self.Channel(4096, 4096, 0, 2, 1)
         rpc.Server.__init__(self, prog=self.program, versions=[self.version],
@@ -162,7 +160,7 @@ class NFS4Proxy(rpc.Server):
             log.debug("** CALLBACK **")
         log.debug("Handling NULL")
         try:
-            self.forward_call(calldata="", callback=callback, procedure=0)
+            self.forward_call(calldata=b"", callback=callback, procedure=0)
             return rpc.SUCCESS, ''
         except rpc.RPCTimeout:
             log.critical("Error: cannot connect to destination server")
@@ -210,7 +208,7 @@ class NFS4Proxy(rpc.Server):
             if error is not None:
                 result = encode_status_by_name(opname.lower()[3:],
                                             int(error),
-                                            msg="Proxy Rewrite Error")
+                                            msg=b"Proxy Rewrite Error")
                 env.results.append(result)
                 p = nfs4lib.FancyNFS4Packer()
                 if callback:
@@ -314,7 +312,7 @@ def scan_options():
         p.error("Unhandled argument %r" % args[0])
     return opts
 
-if __name__ == "__main__":
+def main():
     opts = scan_options()
     S = NFS4Proxy(port=opts.port, dserver=opts.dserver, dport=opts.dport, errorfile="error.xml")
     if True:

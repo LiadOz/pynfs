@@ -6,22 +6,37 @@ passes we expect to merge the two code bases.
 Install dependent modules:
 
 * Debian
-	apt-get install libkrb5-dev python3-dev swig python3-gssapi python3-ply
+	apt-get install libkrb5-dev python3-dev python3-pip
 
 * Fedora
-	yum install krb5-devel python3-devel swig python3-gssapi python3-ply
+	yum install krb5-devel python3-devel python3-pip
 
 * openSUSE
-	zypper install krb5-devel python3-devel swig python3-gssapi python3-ply
+	zypper install krb5-devel python3-devel python3-pip
 
-You can prepare both for use with
-	./setup.py build
-which will create auto-generated files and compile any shared libraries
-in place.
+It is recommended to use a virtual environment (venv) for package installation. To create a venv, run the following command (may require installation):
 
-For more details about 4.0 and 4.1 testing, see nfs4.0/README and
-nfs4.1/README, respectively.  For information about automatic code
-generation from an XDR file, see xdr/README.
+python3 -m venv myenv
+
+Activate the virtual environment by running:
+
+source myenv/bin/activate
+
+To install the package run:
+
+pip install .
+
+For development, it is recommended to install pynfs in editable mode using pip. To do this run:
+
+pip install -e .
+
+This will install pynfs in editable mode, which means that any changes you make to the source code will be immediately reflected in the installed package. This does not include changes to .x files.
+
+After installation, several scripts detailed in setup.cfg will be added to your virtual environment. These scripts can be used to run pynfs tests and perform other tasks.
+
+For more details about 4.0 and 4.1 testing, see pynfs/nfs40/README and
+pynfs/nfs41/README, respectively.  For information about automatic code
+generation from an XDR file, see pynfs/xdr/README.
 
 Note that any server under test must permit connections from high port
 numbers.  (In the case of the Linux NFS server, you can do this by

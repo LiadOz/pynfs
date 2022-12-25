@@ -1,6 +1,4 @@
-#!/usr/bin/env python3
 from __future__ import with_statement
-import use_local # HACK so don't have to rebuild constantly
 from xml.dom import minidom
 import xml
 import time
@@ -8,8 +6,8 @@ import random
 import logging
 import traceback
 import sys
-from xdrdef.nfs4_const import nfsstat4
-from errorfunctions import Errors
+from ..nfscommon.xdrdef.nfs4_const import nfsstat4
+from .errorfunctions import Errors
 
 log = logging.getLogger("nfs.proxy.errorhandler")
 log.setLevel(logging.INFO)

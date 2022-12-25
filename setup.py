@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 from __future__ import print_function
 
 from setuptools import setup, find_packages
@@ -51,7 +49,7 @@ setup(name="pynfs",
       pbr=True,
       # cmdclass={"build_py": build_py, "install": CustomInstall},
       cmdclass={"build_py": build_py},
-      scripts=['pynfs/xdr/xdrgen.py', 'pynfs/nfs40/testserver.py', './showresults.py'],
+      scripts=['pynfs/xdr/xdrgen.py'],
 
       # These will be the same
       author="Fred Isaman",

@@ -1,10 +1,10 @@
-from xdrdef.nfs4_const import *
-import nfs_ops
+from pynfs.nfscommon.xdrdef.nfs4_const import *
+from pynfs.nfscommon import nfs_ops
 op = nfs_ops.NFS4ops()
 from .environment import check, fail
-from xdrdef.nfs4_type import *
+from pynfs.nfscommon.xdrdef.nfs4_type import *
 import random
-import nfs4lib
+from pynfs.nfs41 import nfs4lib
 import threading
 
 def testTwoSessions(t, env):

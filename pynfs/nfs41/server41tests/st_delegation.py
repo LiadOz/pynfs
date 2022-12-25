@@ -1,12 +1,12 @@
 from .st_create_session import create_session
 from .st_open import open_claim4
-from xdrdef.nfs4_const import *
+from pynfs.nfscommon.xdrdef.nfs4_const import *
 
 from .environment import check, fail, create_file, open_file, close_file
-from xdrdef.nfs4_type import *
-import nfs_ops
+from pynfs.nfscommon.xdrdef.nfs4_type import *
+from pynfs.nfscommon import nfs_ops
 op = nfs_ops.NFS4ops()
-import nfs4lib
+from pynfs.nfs41 import nfs4lib
 import threading
 
 def _got_deleg(deleg):

@@ -1,15 +1,15 @@
 from .st_create_session import create_session
-from xdrdef.nfs4_const import *
+from pynfs.nfscommon.xdrdef.nfs4_const import *
 
 from .environment import check, fail, create_file, open_file, close_file, write_file, read_file
 from .environment import open_create_file_op
-from xdrdef.nfs4_type import open_owner4, openflag4, createhow4, open_claim4
-from xdrdef.nfs4_type import creatverfattr, fattr4, stateid4, locker4, lock_owner4
-from xdrdef.nfs4_type import open_to_lock_owner4
-import nfs_ops
+from pynfs.nfscommon.xdrdef.nfs4_type import open_owner4, openflag4, createhow4, open_claim4
+from pynfs.nfscommon.xdrdef.nfs4_type import creatverfattr, fattr4, stateid4, locker4, lock_owner4
+from pynfs.nfscommon.xdrdef.nfs4_type import open_to_lock_owner4
+from pynfs.nfscommon import nfs_ops
 op = nfs_ops.NFS4ops()
 import threading
-import nfs4lib
+from pynfs.nfs41 import nfs4lib
 
 def expect(res, seqid):
     """Verify that open result has expected stateid.seqid"""

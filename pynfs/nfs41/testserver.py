@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # nfs4stest.py - nfsv4 server tester
 #
 # Requires python 3.2
@@ -25,19 +24,18 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 
-import use_local # HACK so don't have to rebuild constantly
 import sys
 if sys.hexversion < 0x03020000:
     print("Requires python 3.2 or higher")
     sys.exit(1)
 import os
 
-import nfs4lib
-import testmod
+from . import nfs4lib
+from .. import testmod
 from optparse import OptionParser, OptionGroup, IndentedHelpFormatter
-import server41tests.environment as environment
+from .server41tests import environment
 import socket
-import rpc.rpc as rpc
+from ..rpc import rpc
 import pickle
 
 VERSION="0.2" # How/when update this?
@@ -229,7 +227,7 @@ def main():
     environment.nfs4client.SHOW_TRAFFIC = opt.showtraffic
 
     # Create test database
-    tests, fdict, cdict = testmod.createtests('server41tests')
+    tests, fdict, cdict = testmod.createtests('pynfs.nfs41.server41tests')
 
     # Deal with any informational options
     if opt.showflags:
@@ -369,6 +367,3 @@ def main():
         testmod.json_printresults(tests, opt.jsonout)
     elif opt.xmlout is not None:
         testmod.xml_printresults(tests, opt.xmlout)
-
-if __name__ == "__main__":
-    main()

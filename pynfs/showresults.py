@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # showresults.py - redisplay results from nfsv4 server tester output file
 #
 # Requires python 3.2
@@ -18,7 +17,7 @@ if  __name__ == "__main__":
         sys.path.insert(1, os.path.join(sys.path[0], 'nfs4.1'))
 
 import pickle
-import testmod
+import pynfs.testmod
 from optparse import OptionParser
 
 def show(filename, opt):
@@ -54,6 +53,3 @@ def main():
         p.error("Need a filename")
     for a in args:
         show(a, opt)
-
-if __name__ == "__main__":
-    main()

@@ -1057,7 +1057,7 @@ class StubFS_Disk(FileSystem):
                 # Create data file
                 fd = open(os.path.join(self.path, "d_%i" % id), "wb")
                 obj.file.seek(0)
-                fd.write(obj.file.read())
+                fd.write(obj.file.read().encode())
                 fd.close()
             elif obj.type == NF4DIR:
                 # Create dir entries

@@ -1,12 +1,12 @@
-from xdrdef.nfs4_const import *
-import nfs_ops
+from pynfs.nfscommon.xdrdef.nfs4_const import *
+from pynfs.nfscommon import nfs_ops
 op = nfs_ops.NFS4ops()
 from .environment import check, fail, create_file, open_file
-from xdrdef.nfs4_type import *
+from pynfs.nfscommon.xdrdef.nfs4_type import *
 import random
-import nfs4lib
+from pynfs.nfs41 import nfs4lib
 import threading
-from rpc.rpc import RPCAcceptError, GARBAGE_ARGS
+from pynfs.rpc.rpc import RPCAcceptError, GARBAGE_ARGS
 
 def create_session(c, clientid, sequenceid, cred=None, flags=0):
     """Send a simple CREATE_SESSION"""

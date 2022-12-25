@@ -9,20 +9,20 @@
 #
 
 import time
-import testmod
-from xdrdef.nfs4_const import *
-from xdrdef.nfs4_type import *
-import rpc.rpc as rpc
-import nfs4client
+from pynfs import testmod
+from pynfs.nfscommon.xdrdef.nfs4_const import *
+from pynfs.nfscommon.xdrdef.nfs4_type import *
+from pynfs.rpc import rpc
+from pynfs.nfs41 import nfs4client
 import sys
 import os
-import nfs4lib
-from nfs4lib import use_obj, UnexpectedCompoundRes
+from pynfs.nfs41 import nfs4lib
+from pynfs.nfs41.nfs4lib import use_obj, UnexpectedCompoundRes
 import logging
 import struct
-from rpc.security import AuthSys, AuthGss
+from pynfs.rpc.security import AuthSys, AuthGss
 from threading import Lock
-import nfs_ops
+from pynfs.nfscommon import nfs_ops
 op = nfs_ops.NFS4ops()
 
 log = logging.getLogger("test.env")
@@ -172,14 +172,14 @@ class Environment(testmod.Environment):
                       "LOOKUP /%s," % b'/'.join(path))
             if res.status == NFS4ERR_NOENT:
                 res = create_obj(sess, path, NF4DIR)
-                check(res, msg="Trying to create /%s," % b'/'.join(path))
+                check(res, msg="Trying to create /%s," % (b'/'.join(path)).decode())
         # ensure /tree exists and is empty
         tree = self.opts.path + [b'tree']
         res = sess.compound(use_obj(tree))
         check(res, [NFS4_OK, NFS4ERR_NOENT])
         if res.status == NFS4ERR_NOENT:
             res = create_obj(sess, tree, NF4DIR)
-            check(res, msg="Trying to create /%s," % b'/'.join(tree))
+            check(res, msg="Trying to create /%s," % (b'/'.join(tree)).decode())
         else:
             clean_dir(sess, tree)
 
@@ -195,7 +195,7 @@ class Environment(testmod.Environment):
             path = tree + [name]
             res = create_obj(sess, path, kind)
             if res.status != NFS4_OK:
-                log.warning("could not create /%s" % b'/'.join(path))
+                log.warning("could not create /%s" % (b'/'.join(path)).decode())
         # Make file-object in /tree
         fh, stateid = create_confirm(sess, b'maketree', tree + [b'file'])
         res = write_file(sess, fh, self.filedata, stateid=stateid)

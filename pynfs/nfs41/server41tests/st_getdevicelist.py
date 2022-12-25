@@ -1,12 +1,12 @@
-from xdrdef.nfs4_const import *
-from xdrdef.nfs4_type import *
+from pynfs.nfscommon.xdrdef.nfs4_const import *
+from pynfs.nfscommon.xdrdef.nfs4_type import *
 from .environment import check, fail, use_obj, open_file, create_file, get_blocksize
-import nfs_ops
+from pynfs.nfscommon import nfs_ops
 op = nfs_ops.NFS4ops()
-from block import Packer as BlockPacker, Unpacker as BlockUnpacker, \
+from pynfs.nfs41.block import Packer as BlockPacker, Unpacker as BlockUnpacker, \
     PNFS_BLOCK_INVALID_DATA, PNFS_BLOCK_READWRITE_DATA, \
     pnfs_block_layoutupdate4
-from nfs4lib import state00
+from pynfs.nfs41.nfs4lib import state00
 
 def testGetDevList(t, env):
     """Check devlist
