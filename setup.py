@@ -2,12 +2,11 @@ from __future__ import print_function
 
 from setuptools import setup, find_packages
 from setuptools.command.build_py import build_py
-from setuptools.command.install import install
 
 from glob import glob
 import sys
 import os
-from pynfs.xdr import xdrgen
+from pynfs import VERSION
 
 DESCRIPTION = """
 pynfs
@@ -16,7 +15,9 @@ pynfs
 Add stuff here.
 """
 
-# DIRS = ["xdr", "rpc", "nfs41", "nfs40"] # Order is important
+with open('requirements.txt', 'r') as f:
+    requirements = f.read().splitlines()
+
 
 class CustomBuildPy(build_py):  # used in setup.cfg
     """Specialized Python source builder that scans for .x files"""
@@ -33,6 +34,7 @@ class CustomBuildPy(build_py):  # used in setup.cfg
 
     @classmethod
     def expand_xdr(cls, directory):
+        from pynfs.xdr import xdrgen
         xdr_files = glob(os.path.join(directory, "*.x"))
         for file in xdr_files:
             # Can conditionalize this
@@ -43,12 +45,13 @@ class CustomBuildPy(build_py):  # used in setup.cfg
 
 setup(name="pynfs",
       packages=find_packages(),
+      version=VERSION,
       description="NFS tools, tests, and support libraries",
       long_description=DESCRIPTION,
-      setup_requires=['pbr>=1.9', 'setuptools>=17.1'],
-      pbr=True,
+      setup_requires=['setuptools>=17.1', 'ply'],
+      install_requires=requirements,
       # cmdclass={"build_py": build_py, "install": CustomInstall},
-      cmdclass={"build_py": build_py},
+      cmdclass={"build_py": CustomBuildPy},
       scripts=['pynfs/xdr/xdrgen.py'],
 
       # These will be the same
